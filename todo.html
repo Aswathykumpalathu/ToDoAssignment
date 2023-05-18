@@ -44,44 +44,44 @@
       .then((data) => {
         let taskList = document.getElementById("taskList");
 
-        data.forEach((task, index) => {
-          if (index < 10) {
-            let row = document.createElement("tr");
-            let count = document.createElement("td");
-            count.innerHTML = index + 1;
-            row.appendChild(count);
-            let taskName = document.createElement("td");
-            taskName.innerHTML = task.title;
-            row.appendChild(taskName);
-            let completed = document.createElement("td");
-            let checkbox = document.createElement("input");
-            checkbox.type = "checkbox";
-            checkbox.name = "completed";
-            checkbox.value = task.completed;
-            completed.appendChild(checkbox);
-            row.appendChild(completed);
-            taskList.appendChild(row);
+        data.slice(0, 30).forEach((task, index) => {
+          let row = document.createElement("tr");
+          let count = document.createElement("td");
+          count.innerHTML = index + 1;
+          row.appendChild(count);
+          let taskName = document.createElement("td");
+          taskName.innerHTML = task.title;
+          row.appendChild(taskName);
+          let completed = document.createElement("td");
+          let checkbox = document.createElement("input");
+          checkbox.type = "checkbox";
+          checkbox.name = "completed";
+          checkbox.value = task.completed;
+          checkbox.checked = task.completed;
+          checkbox.disabled = task.completed; // Disable checkbox for completed tasks
+          completed.appendChild(checkbox);
+          row.appendChild(completed);
+          taskList.appendChild(row);
+
+          if (!task.completed) {
+            checkbox.addEventListener("change", () => {
+              let checkboxes = document.querySelectorAll(
+                "input[type=checkbox]:not(:disabled)"
+              );
+              let checkedCount = 0;
+              checkboxes.forEach((checkbox) => {
+                if (checkbox.checked) {
+                  checkedCount++;
+                }
+              });
+              if (checkedCount >= 5) {
+                alert("Congrats! More than 5 tasks have been successfully completed.");
+              }
+            });
           }
         });
-
-        let checkboxes = document.querySelectorAll("input[type=checkbox]");
-        let checkedCount = 0;
-        checkboxes.forEach((checkbox) => {
-          checkbox.addEventListener("change", () => {
-            if (checkbox.checked) {
-              checkedCount++;
-              console.log('checked and count')
-              console.log(checkedCount);
-            } else {
-              checkedCount--;
-            }
-            if (checkedCount > 5) {
-              alert("Congrats. 5 Tasks have been Successfully Completed");
-            }
-          });
-        });
-        
       });
+
       const logoutMenu = document.getElementById('logout-menu');
     logoutMenu.addEventListener('click', function(event) {
       event.preventDefault(); // Prevent the default link behavior
